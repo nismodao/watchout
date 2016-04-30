@@ -66,9 +66,12 @@ function dragmove(d){
   .attr('cy', d.y = d3.event.y);
 }
 
+var score = 0;
 
+var collisionCount = 0;
 
-var count = 0;
+var highScore = 0;
+
 function collide () {
   var player = d3.select('.player');
   var r = player.attr('r');
@@ -82,16 +85,28 @@ function collide () {
     var yDiff = parseFloat(enemy.attr('cy')) - parseInt(y);
     var separation = Math.sqrt( Math.pow(xDiff,2) + Math.pow(yDiff,2) ); 
       if (separation < radiusSum) {
-        count++;
-        console.log('collision detected with', d, 'seperation is', separation, 'radius is',radiusSum);
-        console.log(count);
+        collisionCount++;
+        d3.select('.collisions').html(['Collisions:' + collisionCount]);
+        if(score > highScore){
+          highScore = score;
+          d3.select('.highscore').html(['High Score: ' + highScore]);
+        }
+        d3.select('.current').html(['Current Score: ' + 0]);
+        score = 0;
+        // console.log('collision detected with', d, 'seperation is', separation, 'radius is',radiusSum);
+        // console.log(collisionCount);
     }
   });
 }
+setInterval(incrementHS, 300);
 
-setInterval(collide,700);
+setInterval(collide, 300);
 
 
+function incrementHS(){
+    d3.select('.current')
+    .html(['Current Score: ' + score++]);  
+}
 
 
 
